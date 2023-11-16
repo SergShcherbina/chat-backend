@@ -40,7 +40,9 @@ io.on('connection', (socket) => {
         usersState.set(socket, {id: uuidv4(), name: userName})
     })
 
-    socket.on('client-message-send', (message: string) => {
+    socket.on('client-message-send', (message: string, errorCallBack) => {
+        if(message.length > 10) return errorCallBack('Maximum message length 10 characters')
+        
         if(message.trim().length < 2) return
         const messageItem = {
             message: message, 
@@ -49,6 +51,8 @@ io.on('connection', (socket) => {
         }
         messages.push( messageItem )
         io.emit('new-message-send', messageItem)
+
+        return null
     });
 
     socket.emit('init-messages-published', messages);
