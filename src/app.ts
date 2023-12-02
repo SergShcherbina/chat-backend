@@ -1,11 +1,17 @@
-import express, { Request, Response } from 'express'
+import express from 'express'
 import http from 'http'
-import { Server, Socket } from "socket.io"
-import { routes } from './route';
-import { registerTodoHandlers } from './socket';
+import {Server, Socket} from "socket.io"
+import {authRrouter} from './routers/authRouter';
+import {rootRouter} from './routers/rootRouter';
+import {registerTodoHandlers} from './socket';
+import * as mongoose from "mongoose";
 
 
 const app = express()
+app.use('/auth', authRrouter);
+app.use('/', rootRouter);
+app.use(express.json());
+
 export const httpServer = http.createServer(app);
 export const io = new Server(httpServer, {
     cors: {
@@ -22,9 +28,17 @@ const socketConnection = (socket: Socket) => {
 };
 io.on('connection', socketConnection);
 
-app.use(routes);
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-httpServer.listen(port, () => {
-    console.log('listening on :' + port);
-});
+const start = async () => {
+    try {
+        await mongoose
+            .connect(`mongodb+srv://1990sergik27:xrFmPzXliaJpTAYn@auth-chat.bhpa9na.mongodb.net/?retryWrites=true&w=majority`)
+        httpServer.listen(PORT, () => {
+            console.log('listening on :' + PORT);
+        });
+    } catch (err) {
+        console.log(err)
+    }
+}
+start();

@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { usersState, addMessage, getMessage, countUsersRoom, addUser, messages, getAllMessageRoom, findUser } from './users';
+import { usersState, addMessage, getMessage, countUsersRoom, addUser, messages, findUser } from './users';
 import { trimString } from './utils/trimString';
 
 
@@ -20,7 +20,7 @@ export const registerTodoHandlers = (io: Server, socket: Socket) => {
             socket.emit('join', { countUsersRoom: countUsersRoom(room), message: `Hello, ${userName} !` })
             socket.to(room)
                 .emit('join', { countUsersRoom: countUsersRoom(room), message: `User ${userName} has joined` });
-        };
+        }
     });
 
     socket.on('client-message-send', ({ textMessage, room }, errorCallBack) => {
@@ -41,7 +41,7 @@ export const registerTodoHandlers = (io: Server, socket: Socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('dissonnect socket rooms:', socket.rooms)
+        console.log('disconnect socket rooms:', socket.rooms)
         usersState.delete(socket.id)
         messages.filter(el => el.user.id !== socket.id)
     });
