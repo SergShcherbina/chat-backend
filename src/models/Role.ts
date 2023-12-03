@@ -1,7 +1,19 @@
-import {model, Schema} from "mongoose";
+import {model, Schema, Model} from "mongoose";
+import {IUser} from "./User";
 
-const Role = new Schema ({
+// Интерфейс для представления структуры данных роли
+interface IRole {
+    value: string;
+}
+// Интерфейс для представления документа роли (с учетом Mongoose)
+interface IRoleDocument extends IRole, Document {}
+
+// Интерфейс для представления модели роли (с учетом Mongoose)
+interface IRoleModel extends Model<IRoleDocument> {}
+
+
+const Role: Schema<IRoleDocument, IRoleModel> = new Schema ({
     value: {type: String, unique: true, default: 'USER'}
 })
 
-export default model('Role', Role)
+export default model('Role', Role);

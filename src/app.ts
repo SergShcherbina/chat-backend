@@ -8,9 +8,10 @@ import * as mongoose from "mongoose";
 
 
 const app = express()
+app.use(express.json()); //express.json() ставим перед route, иначе отсутствует body
 app.use('/auth', authRrouter);
 app.use('/', rootRouter);
-app.use(express.json());
+
 
 export const httpServer = http.createServer(app);
 export const io = new Server(httpServer, {

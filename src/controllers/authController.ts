@@ -1,16 +1,15 @@
 import {Request, Response} from 'express';
-import User from '../models/User';
+import User, {IUser} from '../models/User';
 import Role from '../models/Role';
 import bcrypt from 'bcryptjs';
 
 class authControllerClass {
     async registration(req: Request, res: Response) {
         try {
-            console.log(req)
-            const {username, password} = req.body;
-            const candidate = await User.findOne({username})
+            const {username, password} = await req.body;
+            const candidate: IUser | null = await User.findOne({username})
             if(candidate){
-                return res.status(400).json({message: 'Пользователь с таким исенем существует'})
+                return res.status(400).json({message: 'Пользователь с таким именем существует'})
             }
             const hashPassword = bcrypt.hashSync(password, 7);
             const userRole = await Role.findOne({value: 'USER'})
@@ -33,6 +32,7 @@ class authControllerClass {
 
     async getUsers(req: Request, res: Response) {
         try {
+            //регистрация ролей в mangoose
             // const userRole = new Role()
             // const adminRole = new Role({value: 'ADMIN'})
             // await userRole.save()
