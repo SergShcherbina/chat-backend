@@ -1,12 +1,13 @@
 import {Schema, model, Document, Model} from 'mongoose'
 
-export interface IUser {
+export type IUser = {
+    _id: string;
     username: string;
     password: string;
     role: string[]; // Предполагается, что role - это массив строк
 }
 // Интерфейс для представления документа пользователя (с учетом Mongoose)
-interface IUserDocument extends IUser, Document {}
+type IUserDocument = IUser & Document
 
 // Интерфейс для представления модели пользователя (с учетом Mongoose)
 interface IUserModel extends Model<IUserDocument> {}

@@ -1,7 +1,7 @@
 import {model, Schema, Model} from "mongoose";
 
 // Интерфейс для представления структуры данных роли
-interface IRole {
+export interface IRole {
     value: string;
 }
 // Интерфейс для представления документа роли (с учетом Mongoose)
