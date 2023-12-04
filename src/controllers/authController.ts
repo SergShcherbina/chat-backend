@@ -4,13 +4,13 @@ import Role from '../models/Role';
 import bcrypt from 'bcryptjs';
 import {validationResult} from 'express-validator';
 import jwt from 'jsonwebtoken';
-import { secret } from "../config";
+import {secret} from "../config";
 
-const generateAccessToken = (id: string, roles: string[]) => {
+const generateAccessToken = (id: string, roles: string[]): string => {
     const payload = {
         id, roles
     }
-    return jwt.sign(payload, secret.secret, {expiresIn: '24h'})
+    return jwt.sign(payload, secret, {expiresIn: '24h'})
 }
 
 class AuthControllerClass {
@@ -64,7 +64,8 @@ class AuthControllerClass {
             // await userRole.save()
             // await adminRole.save()
 
-            res.json('server good work')
+            const users: IUser[] = await User.find()
+            res.json(users)
         } catch (e) {
             console.log('authControllerClass.users:', e)
         }

@@ -1,6 +1,8 @@
 import express, {Router} from 'express'
 import {authController} from "../controllers/authController";
 import {check} from 'express-validator';
+import {authMiddleware} from "../middleware/authMiddleware";
+import {roleMiddleware} from "../middleware/roleMiddleware";
 
 export const authRouter: Router = express.Router()
 
@@ -11,4 +13,4 @@ authRouter.post('/registration',
     ],
     authController.registration)
 authRouter.post('/login', authController.login)
-authRouter.get('/users', authController.getUsers)
+authRouter.get('/users',roleMiddleware(['ADMIN']), authController.getUsers)
