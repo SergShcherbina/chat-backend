@@ -1,5 +1,4 @@
 import {model, Schema, Model} from "mongoose";
-import {IUser} from "./User";
 
 // Интерфейс для представления структуры данных роли
 interface IRole {

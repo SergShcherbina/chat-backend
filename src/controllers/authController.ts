@@ -2,20 +2,25 @@ import {Request, Response} from 'express';
 import User, {IUser} from '../models/User';
 import Role from '../models/Role';
 import bcrypt from 'bcryptjs';
+import {validationResult} from 'express-validator'
 
-class authControllerClass {
+class AuthControllerClass {
     async registration(req: Request, res: Response) {
         try {
-            const {username, password} = await req.body;
-            const candidate: IUser | null = await User.findOne({username})
-            if(candidate){
-                return res.status(400).json({message: 'Пользователь с таким именем существует'})
+            const errors = validationResult(req) //отлавливаем ошибки валидации
+            if(errors.isEmpty()){
+                const {username, password}: IUser = await req.body;
+                const candidate: IUser | null = await User.findOne({username})
+                if(candidate){
+                    return res.status(400).json({message: 'Пользователь с таким именем существует'})
+                }
+                const hashPassword = bcrypt.hashSync(password, 7);
+                const userRole = await Role.findOne({value: 'USER'})
+                const user = new User({username, password: hashPassword, role: userRole && [userRole.value]})
+                await user.save()
+                return res.json({message: 'Пользователь успешно зарегистрирован'})
             }
-            const hashPassword = bcrypt.hashSync(password, 7);
-            const userRole = await Role.findOne({value: 'USER'})
-            const user = new User({username, password: hashPassword, role: userRole && [userRole.value]})
-            await user.save()
-            return res.json({message: 'Пользователь успешно зарегистрирован'})
+            res.status(400).json({ errors: errors.array().map(e => e.msg) })
         } catch (e) {
             console.log('authControllerClass.registration:', e)
             res.status(400).json({message: 'Registration error'})
@@ -46,4 +51,4 @@ class authControllerClass {
 
 }
 
-export const authController = new authControllerClass()
+export const authController = new AuthControllerClass()

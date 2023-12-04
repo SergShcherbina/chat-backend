@@ -1,7 +1,7 @@
 import express from 'express'
 import http from 'http'
 import {Server, Socket} from "socket.io"
-import {authRrouter} from './routers/authRouter';
+import {authRouter} from './routers/authRouter';
 import {rootRouter} from './routers/rootRouter';
 import {registerTodoHandlers} from './socket';
 import * as mongoose from "mongoose";
@@ -9,7 +9,7 @@ import * as mongoose from "mongoose";
 
 const app = express()
 app.use(express.json()); //express.json() ставим перед route, иначе отсутствует body
-app.use('/auth', authRrouter);
+app.use('/auth', authRouter);
 app.use('/', rootRouter);
 
 
