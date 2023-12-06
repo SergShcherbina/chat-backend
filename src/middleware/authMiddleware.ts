@@ -1,8 +1,8 @@
-import {Response} from "express";
+import {NextFunction, Response} from "express";
 import {secret} from '../config'
 import jwt from "jsonwebtoken";
 
-export const authMiddleware = (req: any, res: Response, next: any) => {
+export const authMiddleware = (req: any, res: Response, next: NextFunction) => {
     if (req.method === 'OPTIONS') {
         next()
     }

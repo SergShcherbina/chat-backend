@@ -4,14 +4,17 @@ import {Server, Socket} from "socket.io"
 import {authRouter} from './routers/authRouter';
 import {rootRouter} from './routers/rootRouter';
 import {registerTodoHandlers} from './socket';
+import cors from 'cors'
+import dotenv from 'dotenv'
 import * as mongoose from "mongoose";
 
+dotenv.config() //для чтения переменных окружения
 
 const app = express()
+app.use(cors());
 app.use(express.json()); //express.json() ставим перед route, иначе отсутствует body
 app.use('/auth', authRouter);
 app.use('/', rootRouter);
-
 
 export const httpServer = http.createServer(app);
 export const io = new Server(httpServer, {
@@ -23,7 +26,6 @@ export const io = new Server(httpServer, {
     },
 });
 
-
 const socketConnection = (socket: Socket) => {
     registerTodoHandlers(io, socket)
 };
@@ -34,7 +36,7 @@ const PORT = process.env.PORT || 3000;
 const start = async () => {
     try {
         await mongoose
-            .connect(`mongodb+srv://1990sergik27:xrFmPzXliaJpTAYn@auth-chat.bhpa9na.mongodb.net/?retryWrites=true&w=majority`)
+            .connect(process.env.DB_CONN || '')
         httpServer.listen(PORT, () => {
             console.log('listening on :' + PORT);
         });

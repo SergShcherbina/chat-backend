@@ -1,4 +1,4 @@
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import jwt from "jsonwebtoken";
 import {secret} from "../config";
 
@@ -6,7 +6,7 @@ interface TokenPayload {
     roles: ['USER' | 'ADMIN'];
 }
 
-export const roleMiddleware = (arrRole: ['USER' | 'ADMIN']) => (req: Request, res: Response, next: any)=> {
+export const roleMiddleware = (arrRole: ['USER' | 'ADMIN']) => (req: Request, res: Response, next: NextFunction)=> {
     if(req.method === 'OPTIONS'){
         next()
     }
