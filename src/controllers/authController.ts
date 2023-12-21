@@ -21,7 +21,7 @@ class AuthControllerClass {
                 const {username, password}: IUser = await req.body;
                 const candidate: IUser | null = await User.findOne({username})
                 if (candidate) {
-                    return res.status(400).json({message: 'Пользователь с таким именем существует'})
+                    return res.status(400).json({errors: [`Пользователь с именем ${username} существует`]})
                 }
                 const hashPassword = bcrypt.hashSync(password, 7);
                 const userRole = await Role.findOne({value: 'USER'})
@@ -41,15 +41,15 @@ class AuthControllerClass {
             const {username, password}: IUser = req.body;
             const user: IUser | null = await User.findOne({username})
             if (!user) {
-                return res.status(400).json({message: `Имя пользователя ${username} не найдено`})
+                return res.status(400).json({errors: [`Имя пользователя ${username} не найдено`]})
             }
             const isValidPassword = bcrypt.compareSync(password, user.password)
             if (!isValidPassword) {
-                return res.status(400).json({message: `Неверный пароль`})
+                return res.status(400).json({errors: [`Неверный пароль`]})
             }
             //генерируем jwt web token
             const token = generateAccessToken(user._id, user.role)
-            return res.json({token})
+            return res.json({token, username})
         } catch (e) {
             console.log('authControllerClass.login:', e)
             res.status(400).json({message: 'login error'})

@@ -26,7 +26,7 @@ export const registerTodoHandlers = (io: Server, socket: Socket) => {
     socket.on('client-message-send', ({ textMessage, room }, errorCallBack) => {
         textMessage = trimString(textMessage)
 
-        if (textMessage.length > 100) return errorCallBack('Maximum message length 100 characters')
+        if (textMessage.length > 200) return errorCallBack('Maximum message length 200 characters')
         if (!usersState.get(socket.id)) return errorCallBack('Enter your name')
         if (textMessage.length <= 0) return
 
