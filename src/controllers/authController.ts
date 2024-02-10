@@ -71,6 +71,16 @@ class AuthControllerClass {
         }
     }
 
+    async me(req: Request, res: Response) {
+        debugger
+        try {
+            const users: IUser[] = await User.find()
+            res.json({message: "you are authorized", users})
+        } catch (e) {
+            console.log('authControllerClass.users:', e)
+        }
+    }
+
 }
 
 export const authController = new AuthControllerClass()

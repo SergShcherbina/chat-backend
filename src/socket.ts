@@ -31,7 +31,7 @@ export const registerTodoHandlers = (io: Server, socket: Socket) => {
         if (textMessage.length <= 0) return
 
         addMessage(textMessage, socket.id);
-        io.to(room).emit('new-message-send', getMessage(textMessage, room));
+        io.to(room).emit('new-message-send', getMessage(textMessage, room)); //отправка всем пользователям комнаты через io
     });
 
     // socket.emit('init-messages-published', messages);

@@ -41,7 +41,7 @@ const start = async () => {
             console.log('listening on :' + PORT);
         });
     } catch (err) {
-        console.log(err)
+        console.log('App.ts:',  err)
     }
 }
-start();
+void start();
