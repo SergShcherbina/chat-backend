@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import {validationResult} from 'express-validator';
 import jwt from 'jsonwebtoken';
 import {secret} from "../config";
+import {EnumRole} from "../enums/enumRole";
 
 const generateAccessToken = (id: string, roles: string[]): string => {
     const payload = {
@@ -24,7 +25,7 @@ class AuthControllerClass {
                     return res.status(400).json({errors: [`Пользователь с именем ${username} существует`]})
                 }
                 const hashPassword = bcrypt.hashSync(password, 7);
-                const userRole = await Role.findOne({value: 'USER'})
+                const userRole = await Role.findOne({value: EnumRole.USER})
                 const user = new User({username, password: hashPassword, role: userRole && [userRole.value]})
                 await user.save()
                 return res.json({message: 'Пользователь успешно зарегистрирован'})
@@ -72,10 +73,14 @@ class AuthControllerClass {
     }
 
     async me(req: Request, res: Response) {
-        debugger
         try {
-            const users: IUser[] = await User.find()
-            res.json({message: "you are authorized", users})
+            const token = req.headers.authorization?.split(' ')[1]
+            if (!token) {
+                return res.status(401).json({message: "Пользователь не авторизован"})
+            }
+            const {id} = jwt.verify(token, secret) as {id: string}
+            const user: IUser | null = await User.findById({_id: id})
+            res.json({message: "You are logged in", userName:  user?.username, userId: user?._id})
         } catch (e) {
             console.log('authControllerClass.users:', e)
         }
