@@ -36,7 +36,7 @@ const PORT = process.env.PORT || 3000;
 const start = async () => {
     try {
         await mongoose
-            .connect(process.env.DB_CONN || '')
+            .connect('mongodb://127.0.0.1:27017/chatDB' || process.env.DB_CONN)
         httpServer.listen(PORT, () => {
             console.log('listening on :' + PORT);
         });
