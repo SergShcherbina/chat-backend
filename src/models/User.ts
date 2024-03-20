@@ -4,18 +4,19 @@ export type IUser = {
     _id: string;
     username: string;
     password: string;
-    role: string[]; // Предполагается, что role - это массив строк
+    role: string[];
+    rooms: string[]
 }
-// Интерфейс для представления документа пользователя (с учетом Mongoose)
+
 type IUserDocument = IUser & Document
 
-// Интерфейс для представления модели пользователя (с учетом Mongoose)
-interface IUserModel extends Model<IUserDocument> {}
+type IUserModel =  Model<IUserDocument>
 
 const User: Schema<IUserDocument, IUserModel> = new Schema({
     username: {type: String, unique: true, required: true},
     password: {type: String, required: true},
-    role: [{type: String, ref: 'Role'}]
+    role: [{type: String, ref: 'Role'}],
+    rooms: [{type: String, ref: "Room"}]
 })
 
 export default model('User', User)

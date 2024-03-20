@@ -4,6 +4,7 @@ export type IRoom = {
     _id: string;
     roomName: string;
     users: string[];
+    // messages: { message: string, id: string}[]
 };
 
 type IRoomDocument = IRoom & Document;
@@ -12,7 +13,7 @@ type IRoomModel = Model<IRoomDocument>;
 
 const RoomSchema: Schema<IRoomDocument, IRoomModel> = new Schema({
     roomName: {type: String, unique: true, required: true},
-    users: [{type: Schema.Types.ObjectId, ref: 'User'}]  // Ссылка на модель User
+    users: [{type: String, ref: 'User'}]  // Ссылка на модель User
 });
 
-export const Room = model('Room', RoomSchema);
+export default model('Room', RoomSchema);
