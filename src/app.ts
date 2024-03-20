@@ -16,7 +16,10 @@ app.use(express.json()); //express.json() ставим перед route, ина�
 app.use('/auth', authRouter);
 app.use('/', rootRouter);
 
+const PORT = process.env.PORT || 3000;
+
 export const httpServer = http.createServer(app);
+
 export const io = new Server(httpServer, {
     cors: {
         origin: "*",
@@ -30,8 +33,6 @@ const socketConnection = (socket: Socket) => {
     registerTodoHandlers(io, socket)
 };
 io.on('connection', socketConnection);
-
-const PORT = process.env.PORT || 3000;
 
 const start = async () => {
     try {

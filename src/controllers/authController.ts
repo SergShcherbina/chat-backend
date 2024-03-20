@@ -78,6 +78,7 @@ class AuthControllerClass {
             if (!token) {
                 return res.status(401).json({message: "Пользователь не авторизован"})
             }
+            // const room: IUser | null = await Room.findById({users: id})
             const {id} = jwt.verify(token, secret) as {id: string}
             const user: IUser | null = await User.findById({_id: id})
             res.json({message: "You are logged in", userName:  user?.username, userId: user?._id})
